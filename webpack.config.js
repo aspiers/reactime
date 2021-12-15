@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
+const {WatchIgnorePlugin} = require('webpack');
 const ChromeExtensionReloader = require('webpack-chrome-extension-reloader'); // enable hot reloading while developing a chrome extension
 // const TypedocWebpackPlugin = require('typedoc-webpack-plugin');
 
@@ -83,6 +84,10 @@ const config = {
 module.exports = (env, argv) => {
   if (argv.mode === 'development') {
     config.plugins.push(
+      new WatchIgnorePlugin([
+        /.*\/\.#.*/, // non-anchored
+        /\/\.#/,     // anchored
+      ]),
       new ChromeExtensionReloader({
         entries: {
           contentScript: ['app', 'content'],
